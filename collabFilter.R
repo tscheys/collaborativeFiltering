@@ -10,7 +10,9 @@ attach(basetable)
 
 #k = number of features we want 
 k = 5
-alpha = 0.005
+alpha = 0.0005
+lambda = 0.10
+iter = 10
 
 #for later implementation 
 #i = nrow(y) 
@@ -25,7 +27,7 @@ i = max(movie_id)
 j = max(user_id)
 
 #construct y matrix (i, movies are rows, j, users are columns)
-y = matrix(0, nrow = i, ncol = j)
+y = matrix(data = 0, nrow = i, ncol = j)
 #construct identity matrix to check for which user, movie combo we do (1) and do not (0) have a rating
 I = matrix(data = 0, nrow = i, ncol = j)
 
@@ -41,18 +43,26 @@ randomXVals = rnorm(i*k)
 theta = matrix(randomThetaVals, nrow = j, ncol = k)
 x = matrix(randomXVals, nrow = i, ncol = k)
 
-# simultaan updaten van waarden 
-# J = (som van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)
-# without regularization 
-# x * theta' - y
-#create xtheta, is reused in both cost and two gradient functions
-Xtheta = (x %*% t(theta)) * I - y
+#save cost values for plotting 
 
-J = 1/2 * sum(Xtheta^2)  
-# grad theta = theta - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * xi
-theta = theta - alpha * t(Xtheta) %*% x  
-# grad x = x - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * betai
-x = x - alpha * Xtheta %*% theta
+for(f in 1:iter) {
+  #create xtheta, is reused in both cost and two gradient functions
+  Xtheta = ((x %*% t(theta)) * I) - y
+  
+  # COST FUNCTION 
+  # J = (som van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)
+  # without regularization 
+  J = 1/2 * sum(Xtheta^2) 
+  regularization = (lambda/2) * (sum(theta^2) + sum(x^2))
+  J = J + regularization
+  
+  #GRADIENTS THETA AND X
+  # grad theta = theta - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * xi
+  theta = theta - (alpha * (t(Xtheta) %*% x) + (lambda * theta))
+  # grad x = x - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * betai
+  x = x - (alpha * (Xtheta %*% theta) + (lambda * x))
+}
+
 #lessons learned: 
 #x = matrix(0, nro...) fills in 0 in whole of matrix
 #R first multiplies then adds 
