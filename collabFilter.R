@@ -1,6 +1,8 @@
 #collaborative filtering 
 basetable <- read.csv("/Users/tscheys/Google\ Drive/collabFilter/ml-100k/u.data", sep = "\t", header = F)
 names(basetable) = c("user_id", "movie_id", "rating", "timestamp")
+moviesNames <- read.csv("/Users/tscheys/Google\ Drive/collabFilter/ml-100k/u.item", sep = "|", header = F)
+names(moviesNames) = c("index", "name", "date", "NA", "url")
 attach(basetable)
 #put basetable headers naming, put separation
 
@@ -12,7 +14,7 @@ attach(basetable)
 k = 5
 alpha = 0.0005
 lambda = 0.10
-iter = 10
+iter = 1000
 
 #for later implementation 
 #i = nrow(y) 
@@ -67,6 +69,11 @@ for(f in 1:iter) {
 #check if cost is decreasing
 plot(1:iter, Js, main = "Cost functions for increasing iterations", xlab = "iteration", ylab = "cost")
 
+#PREDICTIONS 
+#try to get top 10 recommendations for user 1
+test = (x %*% t(theta))[,1]
+indexes = order(test, decreasing = T)[1:10]
+lowIter = moviesNames[indexes,2]
 #lessons learned: 
 #x = matrix(0, nro...) fills in 0 in whole of matrix
 #R first multiplies then adds 
