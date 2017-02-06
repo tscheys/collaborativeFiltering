@@ -10,6 +10,7 @@ attach(basetable)
 
 #k = number of features we want 
 k = 5
+alpha = 0.005
 
 #for later implementation 
 #i = nrow(y) 
@@ -43,11 +44,15 @@ x = matrix(randomXVals, nrow = i, ncol = k)
 # simultaan updaten van waarden 
 # J = (som van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)
 # without regularization 
-J = 1/2 * sum(((x %*% t(theta)) * I - y)^2)  
-# grad theta = theta - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * xi
-theta = theta - alpha * 
-# grad x = x - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * betai
+# x * theta' - y
+#create xtheta, is reused in both cost and two gradient functions
+Xtheta = (x %*% t(theta)) * I - y
 
+J = 1/2 * sum(Xtheta^2)  
+# grad theta = theta - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * xi
+theta = theta - alpha * t(Xtheta) %*% x  
+# grad x = x - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * betai
+x = x - alpha * Xtheta %*% theta
 #lessons learned: 
 #x = matrix(0, nro...) fills in 0 in whole of matrix
 #R first multiplies then adds 
