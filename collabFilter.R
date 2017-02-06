@@ -25,7 +25,7 @@ j = max(user_id)
 
 #construct y matrix (i, movies are rows, j, users are columns)
 y = matrix(nrow = i, ncol = j)
-#construct identity matrix to check for which user, movie we do and do not have a rating
+#construct identity matrix to check for which user, movie combo we do (1) and do not (0) have a rating
 I = matrix(data = 0, nrow = i, ncol = j)
 
 for(i in 1:nrow(basetable)) {
@@ -33,14 +33,12 @@ for(i in 1:nrow(basetable)) {
   I[movie_id[i], user_id[i]] = 1
 }
 
-#initialiseerd beta vector voor alle users met random waarden
-beta = matrix(nrow = j, ncol = k)
-x = matrix(nrow = i, ncol = k)
-
+#initialiseer beta vector voor alle users met random waarden
 #initialiseer feature vector voor elke movie met random waarden
-  # check rows and cols in rating matrix 
-  # rows number of feature vectors
-  # cols number of beta vectors 
+randomThetaVals = rnorm(j*k)
+randomXVals = rnorm(i*k)
+theta = matrix(randomThetaVals, nrow = j, ncol = k)
+x = matrix(randomXVals, nrow = i, ncol = k)
 
 
 # simultaan updaten van waarden 
