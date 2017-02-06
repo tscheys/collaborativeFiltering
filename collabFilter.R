@@ -1,6 +1,7 @@
 #collaborative filtering 
-basetable <- read.csv("/Users/tscheys/Google\ Drive/collabFilter/ml-100k/u.data")
-
+basetable <- read.csv("/Users/tscheys/Google\ Drive/collabFilter/ml-100k/u.data", sep = "\t", header = F)
+names(basetable) = c("user_id", "movie_id", "rating", "timestamp")
+attach(basetable)
 #put basetable headers naming, put separation
 
 #lookup formulas for collab filtering 
@@ -9,9 +10,28 @@ basetable <- read.csv("/Users/tscheys/Google\ Drive/collabFilter/ml-100k/u.data"
 
 #k = number of features we want 
 k = 5
-i = nrow(y) 
-j = ncol(y)
+
+#for later implementation 
+#i = nrow(y) 
+#j = ncol(y)
+
 #make matrix from basetable  
+#for now we see that 
+summary(basetable)
+#tells us user id ranges from 1 to 943
+#and movie id from 1 to 1628
+i = max(movie_id)
+j = max(user_id)
+
+#construct y matrix (i, movies are rows, j, users are columns)
+y = matrix(nrow = i, ncol = j)
+#construct identity matrix to check for which user, movie we do and do not have a rating
+I = matrix(data = 0, nrow = i, ncol = j)
+
+for(i in 1:nrow(basetable)) {
+  y[movie_id[i], user_id[i]] = rating[i]
+  I[movie_id[i], user_id[i]] = 1
+}
 
 #initialiseerd beta vector voor alle users met random waarden
 beta = matrix(nrow = j, ncol = k)
