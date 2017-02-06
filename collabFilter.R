@@ -24,13 +24,13 @@ i = max(movie_id)
 j = max(user_id)
 
 #construct y matrix (i, movies are rows, j, users are columns)
-y = matrix(nrow = i, ncol = j)
+y = matrix(0, nrow = i, ncol = j)
 #construct identity matrix to check for which user, movie combo we do (1) and do not (0) have a rating
 I = matrix(data = 0, nrow = i, ncol = j)
 
-for(i in 1:nrow(basetable)) {
-  y[movie_id[i], user_id[i]] = rating[i]
-  I[movie_id[i], user_id[i]] = 1
+for(s in 1:nrow(basetable)) {
+  y[movie_id[s], user_id[s]] = rating[s]
+  I[movie_id[s], user_id[s]] = 1
 }
 
 #initialiseer beta vector voor alle users met random waarden
@@ -40,10 +40,14 @@ randomXVals = rnorm(i*k)
 theta = matrix(randomThetaVals, nrow = j, ncol = k)
 x = matrix(randomXVals, nrow = i, ncol = k)
 
-
 # simultaan updaten van waarden 
 # J = (som van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)
-
+# without regularization 
+J = 1/2 * sum(((x %*% t(theta)) * I - y)^2)  
 # grad theta = theta - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * xi
-
+theta = theta - alpha * 
 # grad x = x - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * betai
+
+#lessons learned: 
+#x = matrix(0, nro...) fills in 0 in whole of matrix
+#R first multiplies then adds 
