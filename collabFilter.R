@@ -44,6 +44,7 @@ theta = matrix(randomThetaVals, nrow = j, ncol = k)
 x = matrix(randomXVals, nrow = i, ncol = k)
 
 #save cost values for plotting 
+Js = rep(0, iter)
 
 for(f in 1:iter) {
   #create xtheta, is reused in both cost and two gradient functions
@@ -54,7 +55,8 @@ for(f in 1:iter) {
   # without regularization 
   J = 1/2 * sum(Xtheta^2) 
   regularization = (lambda/2) * (sum(theta^2) + sum(x^2))
-  J = J + regularization
+  #save the cost
+  Js[f] = J + regularization
   
   #GRADIENTS THETA AND X
   # grad theta = theta - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * xi
@@ -62,6 +64,8 @@ for(f in 1:iter) {
   # grad x = x - alpha * SOM ((van theta user j x feature vector van movie i) - y (score user j gave movie i, if exists)) * betai
   x = x - (alpha * (Xtheta %*% theta) + (lambda * x))
 }
+#check if cost is decreasing
+plot(1:iter, Js, main = "Cost functions for increasing iterations", xlab = "iteration", ylab = "cost")
 
 #lessons learned: 
 #x = matrix(0, nro...) fills in 0 in whole of matrix
