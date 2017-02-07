@@ -11,10 +11,10 @@ attach(basetable)
 #check how basetable needs to look
 
 #k = number of features we want 
-k = 5
+k = 10
 alpha = 0.0005
-lambda = 0.10
-iter = 1000
+lambda = 0.005
+iter = 100
 
 #for later implementation 
 #i = nrow(y) 
@@ -71,9 +71,13 @@ plot(1:iter, Js, main = "Cost functions for increasing iterations", xlab = "iter
 
 #PREDICTIONS 
 #try to get top 10 recommendations for user 1
-test = (x %*% t(theta))[,1]
-indexes = order(test, decreasing = T)[1:10]
-lowIter = moviesNames[indexes,2]
+test = (x %*% t(theta))[,180]
+indexes = order(test, decreasing = T)[1:20]
+lowIter3 = moviesNames[indexes,2]
+
+#TODO 
+#do not regularize intercept
+#remove dataset from repository
 #lessons learned: 
 #x = matrix(0, nro...) fills in 0 in whole of matrix
 #R first multiplies then adds 
